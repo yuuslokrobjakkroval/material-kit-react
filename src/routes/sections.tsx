@@ -12,12 +12,11 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
-export const DashboardPage = lazy(() => import('src/pages/dashboard'));
-export const BlogPage = lazy(() => import('src/pages/blog'));
-export const UserPage = lazy(() => import('src/pages/user'));
-export const SignInPage = lazy(() => import('src/pages/sign-in'));
-export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const SignInPage = lazy(() => import('src/pages/sign-in'));
+
+export const DashboardPage = lazy(() => import('src/pages/dashboard'));
+export const UserPage = lazy(() => import('src/pages/user'));
 
 const renderFallback = () => (
   <Box
@@ -41,6 +40,15 @@ const renderFallback = () => (
 
 export const routesSection: RouteObject[] = [
   {
+    path: '/',
+    element: (
+      <AuthLayout>
+        <SignInPage />
+      </AuthLayout>
+    ),
+  },
+  {
+    path: 'dashboard',
     element: (
       <DashboardLayout>
         <Suspense fallback={renderFallback()}>
@@ -48,12 +56,26 @@ export const routesSection: RouteObject[] = [
         </Suspense>
       </DashboardLayout>
     ),
-    children: [
-      { index: true, element: <DashboardPage /> },
-      { path: 'user', element: <UserPage /> },
-      { path: 'products', element: <ProductsPage /> },
-      { path: 'blog', element: <BlogPage /> },
-    ],
+    children: [{ index: true, element: <DashboardPage /> }],
+  },
+  {
+    path: 'server',
+    element: (
+      <DashboardLayout>
+        <UserPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: 'user',
+    element: (
+      <DashboardLayout>
+        <Suspense fallback={renderFallback()}>
+          <Outlet />
+        </Suspense>
+      </DashboardLayout>
+    ),
+    children: [{ index: true, element: <UserPage /> }],
   },
   {
     path: 'sign-in',
